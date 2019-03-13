@@ -19,6 +19,16 @@ public class StudentInterestController {
     @Autowired
     private InterestRepo interestRepo;
 
+    //using list of interests
+    @GetMapping("studentInterestList")
+    public StudentInterestList studentInterestList(){
+        return new StudentInterestList();
+    }
+    @PostMapping("studentInterestList")
+    public ResponseEntity<String> saveStudentInterestList(@RequestBody StudentInterestList studentInterestList){
+        return studentInterestService.saveUsingList(studentInterestList);
+    }
+
     //list of students by interest
     @PostMapping("byInterest")
     public List<Student> findAllType(@RequestBody Interest interest){

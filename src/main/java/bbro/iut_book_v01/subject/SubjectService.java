@@ -1,5 +1,7 @@
 package bbro.iut_book_v01.subject;
 
+import bbro.iut_book_v01.staff.staff.Staff;
+import bbro.iut_book_v01.staff.staff.StaffRepo;
 import bbro.iut_book_v01.subject.subjectProfessor.SubjectProfessor;
 import bbro.iut_book_v01.subject.subjectProfessor.SubjectProfessorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ public class SubjectService {
     private SubjectRepo repo;
     @Autowired
     private SubjectProfessorRepo subjectProfessorRepo;
+    @Autowired
+    private StaffRepo staffRepo;
 
     public ResponseEntity<String> save(Subject subject){
         subject.setSubjectName(subject.getSubjectName().toLowerCase());
@@ -58,6 +62,9 @@ public class SubjectService {
     }
 
     public ResponseEntity<String> saveSubjectProfessor(SubjectProfessor subjectProfessor){
+
+        Staff staff = staffRepo.findByStaffId(subjectProfessor.getStaff().getStaffId());
+
         if (subjectProfessor.getStaff()==null){
             return ResponseEntity.badRequest().body("staff is missing");
         }else if (subjectProfessor.getSubject()==null){
@@ -67,7 +74,7 @@ public class SubjectService {
                 subjectProfessor.getSubject().getSubjectId()
                 )){
             return ResponseEntity.badRequest().body("such record is already exists");
-        }else if (!subjectProfessor.getStaff().getStaffType().equals("professor")){
+        }else if (staff.getStaffType().equals("professor")){
             return ResponseEntity.badRequest().body("staff type not correct");
         }else {
             subjectProfessorRepo.save(subjectProfessor);

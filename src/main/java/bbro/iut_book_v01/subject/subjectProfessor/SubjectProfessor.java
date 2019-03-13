@@ -43,4 +43,13 @@ public class SubjectProfessor {
     public void setStaff(Staff staff) {
         this.staff = staff;
     }
+
+    @Override
+    public String toString() {
+        return "SubjectProfessor{" +
+                "subjectProfessorId=" + subjectProfessorId +
+                ", subject=" + subject +
+                ", staff=" + staff +
+                '}';
+    }
 }

@@ -1,5 +1,6 @@
 package bbro.iut_book_v01.subject;
 
+import bbro.iut_book_v01.subject.subjectProfessor.SubjectProfessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,5 +33,12 @@ public class SubjectController {
         return subjectService.findAllByFS(subject);}
     @PostMapping("bySubjectName")
     public Subject getAllBySubjectName(@RequestBody Subject subject){return subjectService.findBySubjectName(subject);}
-
+    @GetMapping("professorSubject")
+    public SubjectProfessor subjectProfessor(){
+        return new SubjectProfessor();
+    }
+    @PostMapping("professorSubject")
+    public ResponseEntity<String> saveProfSubject(@RequestBody SubjectProfessor subjectProfessor){
+        return subjectService.saveSubjectProfessor(subjectProfessor);
+    }
 }

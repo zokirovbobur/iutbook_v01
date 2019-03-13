@@ -5,6 +5,7 @@ import bbro.iut_book_v01.personalCabinet.interests.InterestCategory.InterestCate
 import bbro.iut_book_v01.personalCabinet.interests.Interest.Interest;
 import bbro.iut_book_v01.personalCabinet.interests.Interest.InterestRepo;
 import bbro.iut_book_v01.student.Student;
+import bbro.iut_book_v01.student.StudentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ public class StudentInterestService {
     private InterestRepo interestRepo;
     @Autowired
     private InterestCategoryRepo categoryRepo;
+    @Autowired
+    private StudentRepo studentRepo;
 
     //all createTeam methods should be checked by format string 'String' is equal to 'string'
 
@@ -38,10 +41,36 @@ public class StudentInterestService {
             return ResponseEntity.badRequest().body("Interest category is incorrect");
         }
         else {
+
+
+
+
             studentInterestRepo.save(studentInterest);
             return ResponseEntity.ok("saved");
         }
     }
+    public ResponseEntity<String> saveUsingList(StudentInterestList studentInterestList){
+        Student student;
+        if (!studentRepo.existsByUuid(studentInterestList.getStudent().getUuid())){
+            return ResponseEntity.badRequest().body("student uuid is not exists");
+        }else{
+            student = studentRepo.findByUuid(studentInterestList.getStudent().getUuid());
+
+            studentInterestList.getInterests().forEach(interest -> {
+                StudentInterest studentInterest = new StudentInterest();
+                studentInterest.setStudent(student);
+                studentInterest.setComment(studentInterestList.getComment());
+                if (!interestRepo.existsByInterestValue(interest.getInterestValue())) {
+                    interest = interestRepo.save(interest);
+                }
+                studentInterest.setInterest(interest);
+                studentInterestRepo.save(studentInterest);
+            });
+
+            return ResponseEntity.ok("saved");    }
+        }
+
+
 
     public ResponseEntity<String> saveInterest(Interest interest){
         if (interest.getInterestCategory()==null){

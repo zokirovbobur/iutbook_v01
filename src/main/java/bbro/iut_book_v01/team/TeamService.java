@@ -47,6 +47,8 @@ public class TeamService {
 
 
             team.setStaff(staffRepo.findByUserId(team.getStaff().getUserId()));
+            team.setComment(team.getComment().toLowerCase());
+            team.setTitle(team.getTitle().toLowerCase());
 
             team = teamRepo.save(team);
             teamRepo.flush();//from stackoverflow , but i have no idea why need
